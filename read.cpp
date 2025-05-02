@@ -2,6 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+	
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 int main() {
     std::ifstream file("data/TestReviews.csv");  // Relative path
