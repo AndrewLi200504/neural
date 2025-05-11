@@ -1,7 +1,9 @@
 #include "network.h"
 
-Network::Network() {
-    net = {{1}};
+Network::Network(int layers) {
+    for (layers; layers > 0; layers--) {
+        net.push_back({1});
+    }
 }
 
 void Network::add_layer() {
@@ -23,10 +25,24 @@ int Network::layers() const {
     return net.size();
 }
 
+int Network::nodes() const {
+    int total = 0;
+    for (auto layer : net) {
+        for (int node : layer) {
+            total++;
+        }
+    }
+    return total;
+}
+
 int Network::nodes(int layer) const {
     return net[layer].size();
 }
 
 int Network::value(int layer, int node) const {
     return net[layer][node];
+}
+
+void Network::assign(int layer, int node, int val) {
+    net[layer][node] = val;
 }

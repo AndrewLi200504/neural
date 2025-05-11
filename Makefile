@@ -2,7 +2,7 @@
 CXX = g++
 
 # Compiler flags
-# CXXFLAGS = -std=c++17 -Wall -Wextra
+CXXFLAGS = -std=c++17 -Wall -Wextra
 
 # Target executable name
 TARGET = read

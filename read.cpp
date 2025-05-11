@@ -105,11 +105,12 @@ int main() {
     // m1.resize(4,4);
     // std::cout << m1 << std::endl;
 
-    Network neural = Network();
-
-    neural.add_layer(19320);
-
+    Network neural = Network(19321);
     std::cout << neural.value(0,0) << std::endl;
+
+    std::cout << neural.nodes() << std::endl;
+
+    std::cout << neural.value(1,0) << std::endl;
 
     return 0;
 }
