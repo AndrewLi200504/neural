@@ -1,23 +1,21 @@
-# Makefile for reading CSV using ifstream
-
 # Compiler
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -std=c++17 -Wall -Wextra -Ieigen
+# CXXFLAGS = -std=c++17 -Wall -Wextra
 
 # Target executable name
 TARGET = read
 
 # Source file
-SRC = read.cpp
+SRC = read.cpp network.cpp
 
 # Default target
 all: $(TARGET)
 
 # Build target
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 
 # Run the program (assumes TestReviews.csv is in ./data/)
 run: $(TARGET)

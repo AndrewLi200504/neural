@@ -4,8 +4,7 @@
 
 class Network {
     public:
-
-    // Constructor for a node network with 1 node
+    // Constructor for a node network with 1 node and 1 layer
     Network();
 
     // Adds a layer to the network
@@ -20,12 +19,13 @@ class Network {
     // Returns number of layers in the network
     int layers() const;
 
-    // Returns number of nodes in a layer
+    // Returns number of nodes in specified layer
     int nodes(int layer) const;
 
     // Returns value at a layer, node
     int value(int layer, int node) const;
 
     private:
+    // vector (layer) of vectors (nodes in layer)
     std::vector<std::vector<int>> net;
 };
