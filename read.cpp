@@ -6,7 +6,8 @@
 #include <vector>
 #include <algorithm>
 #include <cctype>
-#include <Eigen/Core>
+//#include <Eigen/Core>
+#include "network.h"
 
 // Helper function to clean and tokenize text
 std::vector<std::string> tokenize(const std::string& text) {
@@ -95,5 +96,20 @@ int main() {
     }
     
     file.close();
+
+    // Eigen::Matrix3f m1;
+    // m1 << 1, 2, 3,
+    //       4, 5, 6,
+    //       7, 8, 9;
+    // std::cout << m1 << std::endl;
+    // m1.resize(4,4);
+    // std::cout << m1 << std::endl;
+
+    Network neural = Network();
+
+    neural.add_layer(19320);
+
+    std::cout << neural.value(0,0) << std::endl;
+
     return 0;
 }
