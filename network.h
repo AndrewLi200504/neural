@@ -4,34 +4,35 @@
 
 class Network {
     public:
-    // Constructor for a node network with layers all with 1 node initialized with 1
-    Network(int layers);
+    // Constructs a network w/ one layer and a number of nodes
+    Network(std::vector<float> initLayer);
 
-    // Adds a layer to the network
-    void add_layer();
-
-    // Adds a number of layers to the network
+    // Adds a layer to the network with specified # of nodes containing randomized weights
     void add_layer(int amt);
 
-    // Adds a node to a specific layer
+    // Adds a node w/ randomized weight to a specific 0-indexed layer
+    // CONSTRAINT: layer must exist
     void add_node(int layer);
 
     // Returns number of layers in the network
-    int layers() const;
+    int layer_count() const;
 
     // Returns the amount of nodes in entire network
-    int nodes() const;
+    int total_node_count() const;
 
-    // Returns number of nodes in specified layer
-    int nodes(int layer) const;
+    // Returns number of nodes in specified 0-indexed layer
+    // CONSTRAINT: layer must exist
+    int node_count(int layer) const;
 
-    // Returns value at a layer, node
-    int value(int layer, int node) const;
+    // Returns value at a 0-indexed layer, node
+    // CONSTRAINT: layer and node must exist
+    float get_weight(int layer, int node) const;
 
-    // Gives a specific node a specific value
-    void assign(int layer, int node, int val);
+    // Gives a specific node a specific weight
+    // CONSTRAINT: layer and node must exist
+    void assign(int layer, int node, float weight);
 
     private:
     // vector (layer) of vectors (nodes in layer)
-    std::vector<std::vector<int> > net;
+    std::vector<std::vector<float>> net;
 };
