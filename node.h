@@ -15,8 +15,8 @@ class Node {
     std::vector<float> getWeights() const;
 
     private:
-    // gi
-    
+    // Bias
      float bias;
+     // Vector of weights (connections) to every node in the next layer
      std::vector<float> weights;
 };
