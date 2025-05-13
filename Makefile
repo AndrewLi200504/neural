@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra
 TARGET = read
 
 # Source file
-SRC = read.cpp network.cpp
+SRC = read.cpp network.cpp node.cpp
 
 # Default target
 all: $(TARGET)

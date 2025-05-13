@@ -8,6 +8,7 @@
 #include <cctype>
 //#include <Eigen/Core>
 #include "network.h"
+#include "node.h"
 #include <climits>
 
 // Helper function to clean and tokenize text
@@ -114,7 +115,8 @@ int main() {
         float w = static_cast <float>(rand()) / static_cast <float>(RAND_MAX); // normalize to [0, 1]
         temp.push_back(w);
     }
-
+    Node nd0 = Node();
+    Node nd1 = Node(1, {0.0, 1.1, 2.2});
     Network neural = Network(temp);
 
     std::cout << neural.total_node_count() << std::endl;
@@ -131,6 +133,15 @@ int main() {
     printf("%f\n", neural.get_weight(1,1));
 
     printf("%d\n", neural.total_node_count());
-
+    printf("%f\n", nd0.getBias());
+    
+    for (int i = 0; i < nd0.getWeights().size(); i++) {
+        printf("%f\n", nd0.getWeights()[i]);
+    }
+    printf("%f\n", nd1.getBias());
+    
+    for (int i = 0; i < nd1.getWeights().size(); i++) {
+        printf("%f\n", nd1.getWeights()[i]);
+    }
     return 0;
 }
