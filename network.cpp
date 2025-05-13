@@ -8,14 +8,14 @@ void Network::add_layer(int amt) {
     srand(time(0));
     net.resize(net.size() + 1);
     for (int i = 0; i < amt; i++) {
-        float w = rand() / RAND_MAX; // normalize to [0, 1]
+        float w = static_cast <float>(rand()) / static_cast <float>(RAND_MAX); // normalize to [0, 1]
         net[net.size() - 1].push_back(w);
     }
 }
 
 void Network::add_node(int layer) {
     srand(time(0));
-    float w = rand() / RAND_MAX; // normalize to [0, 1]
+    float w = static_cast <float>(rand()) / static_cast <float>(RAND_MAX); // normalize to [0, 1]
     net[layer].push_back(w);
 }
 

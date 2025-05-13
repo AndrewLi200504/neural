@@ -8,6 +8,7 @@
 #include <cctype>
 //#include <Eigen/Core>
 #include "network.h"
+#include <climits>
 
 // Helper function to clean and tokenize text
 std::vector<std::string> tokenize(const std::string& text) {
@@ -105,12 +106,31 @@ int main() {
     // m1.resize(4,4);
     // std::cout << m1 << std::endl;
 
-    // Network neural = Network(19321);
-    // std::cout << neural.value(0,0) << std::endl;
+    //temporary testing to see if initializing works
+    std::vector<float> temp;
 
-    // std::cout << neural.nodes() << std::endl;
+    srand(time(0));
+    for (int i = 0; i < 19321; i++) {
+        float w = static_cast <float>(rand()) / static_cast <float>(RAND_MAX); // normalize to [0, 1]
+        temp.push_back(w);
+    }
 
-    // std::cout << neural.value(1,0) << std::endl;
+    Network neural = Network(temp);
+
+    std::cout << neural.total_node_count() << std::endl;
+
+    printf("%f\n", neural.get_weight(0,0));
+    printf("%f\n", neural.get_weight(0,1));
+    printf("%f\n", neural.get_weight(0,2));
+    printf("%f\n", neural.get_weight(0,3));
+    printf("%f\n", neural.get_weight(0,4));
+    printf("%f\n", neural.get_weight(0,5));
+
+    neural.add_layer(2);
+    printf("%f\n", neural.get_weight(1,0));
+    printf("%f\n", neural.get_weight(1,1));
+
+    printf("%d\n", neural.total_node_count());
 
     return 0;
 }
