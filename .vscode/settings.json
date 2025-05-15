@@ -85,5 +85,6 @@
         "text_encoding": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/andre/neural/eigen"
 }
