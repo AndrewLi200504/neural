@@ -8,10 +8,10 @@ class Layer {
     // activation function
     double activate(double input);
 
-    // forward feeding algorithm
+    // calculates a vector of output values using the weights and biases of this layer
     std::vector<double> forward(const std::vector<double>& input);
     
-    // backprop algorithm
+    // calculates the gradient for the previous layer
     std::vector<double> backward(const std::vector<double>& grad_output, double learning_rate);
 
     private:
@@ -19,6 +19,10 @@ class Layer {
     int input_size;
     // # of nodes after this layer
     int output_size;
+    // saves last input for backprop
+    std::vector<double> last_input;
+    // saves last output for backprop
+    std::vector<double> last_output;
 
     // matrix of weights of size output x input ( [output][input] )
     // each node in the layer will have their own set of weights coming from the previous layer

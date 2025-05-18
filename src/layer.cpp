@@ -22,6 +22,7 @@ double Layer::activate(double input) {
 }
 
 std::vector<double> Layer::forward(const std::vector<double>& input) {
+    last_input = input;
     std::vector<double> output(output_size, 0);
 
     for (int i = 0; i < output_size; i++) {
@@ -31,6 +32,7 @@ std::vector<double> Layer::forward(const std::vector<double>& input) {
         output[i]+=biases[i];
         output[i] = activate(output[i]);
     }
+    last_output = output;
     return output;
 }
 
@@ -38,9 +40,13 @@ std::vector<double> Layer::backward(const std::vector<double>& grad_output, doub
     std::vector<double> grad_input(input_size, 0);
 
     for (int i = 0; i < output_size; i++) {
-
+        double activation_deriv = activate(last_output[i])*(1-activate(last_output[i])); // put last input through derivative of activation function (sigmoid in this case)
+        double delta = grad_output[i] * activation_deriv; // change in loss to change in this input (dL/dz)
         for (int j = 0; j < input_size; j++) {
-            
+            grad_input[j] += delta*weights[i][j]; // gradient for each input node; sum of delta * weights that came from that node
+            weights[i][j] -= learning_rate*delta*last_input[j]; // adjust the weight with learning rate * dL/dw
         }
+        biases[i] -= learning_rate*delta; // adjust bias too
     }
+    return grad_input;
 }
