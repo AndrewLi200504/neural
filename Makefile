@@ -9,10 +9,10 @@ TARGET = read
 TEST_TARGET = test_exec
 
 # Source file
-SRC = src/read.cpp src/network.cpp src/node.cpp
+SRC = src/read.cpp src/network.cpp src/layer.cpp
 
 # Test files
-TEST_SRC = tests/test_main.cpp tests/test_node.cpp tests/catch_amalgamated.cpp src/node.cpp
+TEST_SRC = tests/test_main.cpp tests/test_layer.cpp tests/catch_amalgamated.cpp src/layer.cpp
 
 
 # Default target

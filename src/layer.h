@@ -14,6 +14,14 @@ class Layer {
     // calculates the gradient for the previous layer
     std::vector<double> backward(const std::vector<double>& grad_output, double learning_rate);
 
+    
+    // get input size
+    int getInputSize() const;
+
+    // get output size
+    int getOutputSize() const;
+    
+
     private:
     // # of nodes before this layer
     int input_size;

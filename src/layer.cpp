@@ -1,5 +1,5 @@
 #include "layer.h"
-
+#include <cmath>
 Layer::Layer(int in_size, int out_size) {
     input_size = in_size;
     output_size = out_size;
@@ -50,3 +50,13 @@ std::vector<double> Layer::backward(const std::vector<double>& grad_output, doub
     }
     return grad_input;
 }
+
+int Layer::getInputSize() const {
+    return input_size;
+}
+
+int Layer::getOutputSize() const {
+    return output_size;
+}
+
+
