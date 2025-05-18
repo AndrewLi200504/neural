@@ -8,7 +8,6 @@
 #include <cctype>
 //#include <Eigen/Core>
 #include "network.h"
-#include "node.h"
 #include <climits>
 
 // Helper function to clean and tokenize text
