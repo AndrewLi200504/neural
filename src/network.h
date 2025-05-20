@@ -10,7 +10,7 @@ class Network {
     void add_layer(int input_size, int output_size);
 
     // Returns the value of the output node given a specific input vector
-    double predict(const std::vector<double>& input);
+    std::vector<double> predict(const std::vector<double>& input);
 
     // Runs the data forward and backwards through the network repeat # of times, changing the weights within layers
     void train(const std::vector<std::vector<double>>& inputs, const std::vector<std::vector<double>>& targets,

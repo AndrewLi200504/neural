@@ -5,12 +5,33 @@ void Network::add_layer(int input_size, int output_size) {
     layers.push_back(layer);
 }
 
-double Network::predict(const std::vector<double>& input) {
-    
+std::vector<double> Network::predict(const std::vector<double>& input) {
+    std::vector<double> temp = input;
+
+    // Pass the new input through each layer
+    for (Layer layer : layers) {
+        temp = layer.forward(temp);
+    }
+
+    return temp; // output is either 0 or 1
 }
 
 void Network::train(const std::vector<std::vector<double>>& inputs, const std::vector<std::vector<double>>& targets, int repeats, double learning_rate) {
+    for (int x = 0; x < repeats; x++) {
+        for (int i = 0; i < inputs.size(); i++) {
+            std::vector<double> output = predict(inputs[i]); // Train on each data in the set
 
+            std::vector<double> gradients(output.size());
+            for (int j = 0; j < output.size(); j++) {
+                gradients[j] = output[j] - targets[i][j]; // take prediction - target for derivative of the mean square error
+                // the derivative isnt *2 here because Loss = 1/2 (predict - target)^2 so it cancels out
+            }
+
+            for (int k = layers.size() - 1; k >= 0; k--) {
+                gradients = layers[k].backward(gradients, learning_rate); // pass the gradients through each layer back
+            }
+        }
+    }
 }
 
 // Network::Network(std::vector<float> initLayer) {
