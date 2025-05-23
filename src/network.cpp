@@ -18,19 +18,32 @@ std::vector<double> Network::predict(const std::vector<double>& input) {
 
 void Network::train(const std::vector<std::vector<double>>& inputs, const std::vector<std::vector<double>>& targets, int repeats, double learning_rate) {
     for (int x = 0; x < repeats; x++) {
+        double eloss = 0;
         for (int i = 0; i < inputs.size(); i++) {
             std::vector<double> output = predict(inputs[i]); // Train on each data in the set
 
-            std::vector<double> gradients(output.size());
-            for (int j = 0; j < output.size(); j++) {
-                gradients[j] = output[j] - targets[i][j]; // take prediction - target for derivative of the mean square error
-                // the derivative isnt *2 here because Loss = 1/2 (predict - target)^2 so it cancels out
-            }
+            double prediction = output[0]; // output is only one value
+            double target = targets[i][0];
+            prediction = std::min(std::max(prediction, 1e-7), 1.0 - 1e-7); // avoid log(0)
+
+            // This is optional; only to see loss
+            double loss = -(target*std::log(prediction)+(1-target)*std::log(1-prediction)); // binary cross entropy formula
+            eloss+=loss;
+
+            std::vector<double> gradients = {prediction - target}; //derivative of binary cross entropy with sigmoid output
+
+            // std::vector<double> gradients(output.size());
+            // for (int j = 0; j < output.size(); j++) {
+            //     gradients[j] = output[j] - targets[i][j]; // take prediction - target for derivative of the mean square error
+            //     // the derivative isnt *2 here because Loss = 1/2 (predict - target)^2 so it cancels out
+            // }
 
             for (int k = layers.size() - 1; k >= 0; k--) {
                 gradients = layers[k].backward(gradients, learning_rate); // pass the gradients through each layer back
             }
         }
+
+        std::cout << "Loss " << repeats + 1 << " - Avg loss: " << (eloss/inputs.size()) << std::endl;
     }
 }
 

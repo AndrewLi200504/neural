@@ -35,6 +35,28 @@ std::vector<std::string> tokenize(const std::string& text) {
     return tokens;
 }
 
+// Helper function to find the amount of times a word appears in a string of words
+int word_frequency(const std::string& word, const std::vector<std::string>& words) {
+    int count = 0;
+    for (std::string w : words) {
+        if (word.compare(w) == 0) { // if words are equal, add to count
+            count++;
+        }
+    }
+    return count;
+}
+
+// Helper function to find total # of reviews that contain a given word
+int doc_frequency(const std::string& word, const std::vector<std::vector<std::string>>& reviews) {
+    int count = 0;
+    for (std::vector<std::string> r : reviews) {
+        if (word_frequency(word, r) > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+
 int main() {
     std::ifstream file("data/TestReviews.csv");  // Relative path
     if (!file.is_open()) {
@@ -44,6 +66,8 @@ int main() {
 
     // Create vocabulary map: word -> index
     std::unordered_map<std::string, int> vocabulary;
+
+    std::vector<std::vector<std::string>> reviews;
     
     // Skip header
     std::string header;
@@ -71,6 +95,8 @@ int main() {
         
         // Tokenize the review
         std::vector<std::string> words = tokenize(review);
+
+        reviews.push_back(words);
         
         // Add words to vocabulary
         for (const std::string& word : words) {
@@ -106,14 +132,49 @@ int main() {
     // m1.resize(4,4);
     // std::cout << m1 << std::endl;
 
-    //temporary testing to see if initializing works
-    std::vector<float> temp;
-
-    srand(time(0));
-    for (int i = 0; i < 19321; i++) {
-        float w = static_cast <float>(rand()) / static_cast <float>(RAND_MAX); // normalize to [0, 1]
-        temp.push_back(w);
+    // Get all unique words in alphabetical order
+    std::vector<std::string> alpha_words;
+    for (const auto& entry : vocabulary) {
+        alpha_words.push_back(entry.first);
     }
+    sort(alpha_words.begin(), alpha_words.end());
+
+    std::vector<std::vector<double>> samples;
+    std::vector<std::vector<double>> results;
+
+    // !!! NEEDS TO BE OPTIMIZED! (cut down to 200 reviews first; use hash map?)
+    int ra = 0;
+    // for all 4148 reviews, create an input vector of their weights using tf-idf
+    for (unsigned long i = 0; i < reviews.size(); i++) {
+        std::cout << i << std::endl;
+        std::vector<double> rev(alpha_words.size(), 0); // frequencies of each review that will be part of the input vector
+        for (unsigned long j = 0; j < reviews[i].size(); j++) { // go through every word in each review (will result in repeats but shouldnt affect final outcome)
+            // find corresponding index of this word in the alpha list
+            auto w = find(alpha_words.begin(), alpha_words.end(), reviews[i][j]);
+            int index = w - alpha_words.begin();
+
+            // ra++;
+            // std::cout << ra << std::endl;
+            // use term frequency/inverse document frequency to calculate frequency of given word
+
+            // # of times the word appears in the review / total # of words in the review
+            double tf = (double)word_frequency(reviews[i][j], reviews[i])/(double)reviews[i].size();
+            // log(total # of reviews / # of reviews that contain the word)
+            double idf = (double)log((double)reviews.size()/(double)doc_frequency(reviews[i][j], reviews));
+            rev[index] = tf*idf; // multiply values as tf-idf does
+        }
+        samples.push_back(rev);
+    }
+
+    // Grab the target value for each review (where are the target values stored?)
+    
+
+    // network with 19321 inputs; 3 inner layers (50 outputs from those layers, each) and 1 output node
+    Network network;
+    network.add_layer(19321, 50);
+    network.add_layer(50, 50);
+    network.add_layer(50, 50);
+    network.add_layer(50, 1);
 
     return 0;
 }
