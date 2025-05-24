@@ -1,15 +1,19 @@
 #include "layer.h"
 #include <cmath>
+#include <random>
+
 Layer::Layer(int in_size, int out_size) {
     input_size = in_size;
     output_size = out_size;
-
+    std::mt19937 gen(std::random_device{}());
+    std::uniform_real_distribution<double> dist(-1.0, 1.0);
     // Create a matrix of randomized weights from 0 - 1
     for (int i = 0; i < output_size; i++) {
-        biases.push_back((double)rand()/(double)RAND_MAX); // Create random biases from 0 - 1
+        biases.push_back(dist(gen)); // Create random biases from 0 - 1
         std::vector<double> temp;
+        
         for (int j = 0; j < input_size; j++) {
-            double random = ((double)rand()/(double)RAND_MAX);
+            double random = dist(gen);
             temp.push_back(random);
         }
         weights.push_back(temp);
@@ -57,6 +61,14 @@ int Layer::getInputSize() const {
 
 int Layer::getOutputSize() const {
     return output_size;
+}
+
+std::vector<std::vector<double>> Layer::getWeights() const {
+    return weights;
+}
+
+std::vector<double> Layer::getBiases() const {
+    return biases;
 }
 
 

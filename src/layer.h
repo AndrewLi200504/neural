@@ -21,7 +21,11 @@ class Layer {
     // get output size
     int getOutputSize() const;
     
+    // get weights 
+    std::vector<std::vector<double>> getWeights() const;
 
+    // get biases
+    std::vector<double> getBiases() const;
     private:
     // # of nodes before this layer
     int input_size;
