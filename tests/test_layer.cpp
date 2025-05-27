@@ -38,7 +38,7 @@ TEST_CASE("Layer constructor with weights and biases", "[layer]") {
     REQUIRE(isRandomizedBiases(biases, outputSize));
 }
 
-TEST_CASE("Layer constructor with weights and biases, different dimensions" "[layer]") {
+TEST_CASE("Layer constructor with weights and biases, different dimensions", "[layer]") {
     Layer l = Layer(5, 6);
     int inputSize = l.getInputSize();
     int outputSize = l.getOutputSize();
@@ -46,4 +46,8 @@ TEST_CASE("Layer constructor with weights and biases, different dimensions" "[la
     std::vector<double> biases = l.getBiases();
     REQUIRE(isRandomizedWeights(weights, outputSize, inputSize));
     REQUIRE(isRandomizedBiases(biases, outputSize));
+}
+
+TEST_CASE("Test activation function", "[layer]") {
+    REQUIRE(activate(0) == 0.5);
 }

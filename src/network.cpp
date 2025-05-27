@@ -1,5 +1,5 @@
 #include "network.h"
-
+#include <cmath>
 void Network::add_layer(int input_size, int output_size) {
     Layer layer = Layer(input_size, output_size);
     layers.push_back(layer);

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <string>
 class Layer {
     public:
-    // Creates a default node
+    // Creates a default Layer
     Layer(int in_size, int out_size);
 
     // activation function
