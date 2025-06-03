@@ -49,5 +49,6 @@ TEST_CASE("Layer constructor with weights and biases, different dimensions", "[l
 }
 
 TEST_CASE("Test activation function", "[layer]") {
-    REQUIRE(activate(0) == 0.5);
+    Layer l = Layer(5,5);
+    REQUIRE(l.activate(0) ==  Catch::Approx(0.5).epsilon(0.0001));
 }
