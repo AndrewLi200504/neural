@@ -1,10 +1,4 @@
-#include <vector>
-#include <string>
-#include <unordered_set>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cmath>
+
 #include "read_helpers.h"
 
 std::vector<std::string> tokenize(const std::string& text) {
@@ -39,76 +33,78 @@ std::pair<std::vector<std::string>, std::vector<std::string>> read_reviews_and_l
         return {{}, {}};
     }
 
-    std::ostringstream current_review;
+    std::string current_review;
+    std::string current_label;
     bool inside_quoted_field = false;
+    bool reading_review = true; // true for review, false for label
     
     while (std::getline(file, line)) {
-        // Handle completely empty lines
         if (line.empty() && !inside_quoted_field) {
             continue;
         }
         
-        // If we're not inside a quoted field, this should be the start of a new record
-        if (!inside_quoted_field) {
-            if (line.empty() || line[0] != '"') {
-                std::cerr << "Warning: Expected quoted field, got: " << line.substr(0, std::min(50, (int)line.length())) << std::endl;
-                continue;
-            }
-            // Start new review
-            current_review.str("");
-            current_review.clear();
-            inside_quoted_field = true;
-        }
-        
-        // Process the line character by character
         for (size_t i = 0; i < line.length(); ++i) {
             char c = line[i];
             
-            if (inside_quoted_field) {
+            if (!inside_quoted_field) {
                 if (c == '"') {
-                    // Check if this is an escaped quote (followed by another quote)
+                    inside_quoted_field = true;
+                    reading_review = true;
+                    current_review.clear();
+                    current_label.clear();
+                } else if (c == ',') {
+                    // Switch from review to label
+                    reading_review = false;
+                } else if (!reading_review) {
+                    current_label += c;
+                }
+            } else {
+                // Inside quoted field
+                if (c == '"') {
+                    // Check if this is an escaped quote
                     if (i + 1 < line.length() && line[i + 1] == '"') {
-                        current_review << '"';  // Add single quote to content
+                        current_review += '"';
                         ++i; // Skip the next quote
                     } else {
-                        // This might be the end of the quoted field
-                        // Check if followed by comma
-                        if (i + 1 < line.length() && line[i + 1] == ',') {
-                            // End of review found
-                            std::string review_text = current_review.str();
-                            std::string label = line.substr(i + 2);
+                        // End of quoted field
+                        inside_quoted_field = false;
+                        reading_review = false;
+                        
+                        // Look for comma after the quote
+                        size_t comma_pos = i + 1;
+                        while (comma_pos < line.length() && (line[comma_pos] == ' ' || line[comma_pos] == '\t')) {
+                            comma_pos++;
+                        }
+                        
+                        if (comma_pos < line.length() && line[comma_pos] == ',') {
+                            // Extract label from rest of line
+                            current_label = line.substr(comma_pos + 1);
+                            // Trim whitespace from label
+                            current_label.erase(0, current_label.find_first_not_of(" \t\r\n"));
+                            current_label.erase(current_label.find_last_not_of(" \t\r\n") + 1);
                             
-                            // Clean up label
-                            label.erase(0, label.find_first_not_of(" \t\r\n"));
-                            label.erase(label.find_last_not_of(" \t\r\n") + 1);
-                            
-                            if (!review_text.empty()) {
-                                reviews.push_back(review_text);
-                                labels.push_back(label);
+                            // Save the review and label
+                            if (!current_review.empty()) {
+                                reviews.push_back(current_review);
+                                labels.push_back(current_label);
                             }
                             
-                            inside_quoted_field = false;
-                            break; // Done with this line
-                        } else {
-                            // Quote not followed by comma, treat as regular quote
-                            current_review << c;
+                            // Reset for next record
+                            current_review.clear();
+                            current_label.clear();
+                            break;
                         }
                     }
                 } else {
-                    current_review << c;
+                    current_review += c;
                 }
             }
         }
         
-        // If still inside quoted field, add newline (multi-line review)
+        // Add newline if we're still inside a quoted field
         if (inside_quoted_field) {
-            current_review << '\n';
+            current_review += '\n';
         }
-    }
-    
-    // Handle case where file ends while still in quoted field
-    if (inside_quoted_field) {
-        std::cerr << "Warning: File ended while still parsing a quoted field" << std::endl;
     }
     
     std::cout << "Successfully parsed " << reviews.size() << " reviews with labels." << std::endl;

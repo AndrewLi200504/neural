@@ -1,6 +1,13 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
 #include "labeledvector.h"
 #include "network.h"
 
