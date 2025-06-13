@@ -66,6 +66,6 @@ int main() {
     
     // Setup the neural network
     Network network = setup_network(vocabulary.size());
-
+    // network.train();
     return 0;
 }

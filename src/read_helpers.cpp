@@ -11,19 +11,19 @@ std::vector<std::string> tokenize(const std::string& text) {
     std::vector<std::string> tokens;
     std::string word;
     for (char c : text) {
-        if (std::isalnum(c) || c == '\'') {
+        if (std::isalnum(c) || c == '\'' || c == '-') { // checks for word letters + the characters ' and - in words
             word += std::tolower(c);
         } else if (!word.empty()) {
-            tokens.push_back(word);
-            word.clear();
+            tokens.push_back(word); // add finished word to tokens
+            word.clear(); // reset for grabbing next word
         }
     }
-    if (!word.empty()) tokens.push_back(word);
+    if (!word.empty()) tokens.push_back(word); // add final word to tokens
     return tokens;
 }
 
 std::pair<std::vector<std::string>, std::vector<std::string>> read_reviews_and_labels(const std::string& filepath) {
-    std::ifstream file(filepath);
+    std::ifstream file(filepath); // parse file
     if (!file.is_open()) {
         std::cerr << "Failed to open file: " << filepath << std::endl;
         return {{}, {}};
@@ -39,7 +39,7 @@ std::pair<std::vector<std::string>, std::vector<std::string>> read_reviews_and_l
         return {{}, {}};
     }
 
-    std::ostringstream current_review;
+    std::ostringstream current_review; // string object
     bool inside_quoted_field = false;
     
     while (std::getline(file, line)) {
@@ -80,7 +80,7 @@ std::pair<std::vector<std::string>, std::vector<std::string>> read_reviews_and_l
                             
                             // Clean up label
                             label.erase(0, label.find_first_not_of(" \t\r\n"));
-                            label.erase(label.find_last_not_of(" \t\r\n") + 1);
+                            label.erase(label.find_last_not_of(" \t\r\n") + 1); // removes unnecessary characters from start/end of label
                             
                             if (!review_text.empty()) {
                                 reviews.push_back(review_text);
@@ -95,7 +95,7 @@ std::pair<std::vector<std::string>, std::vector<std::string>> read_reviews_and_l
                         }
                     }
                 } else {
-                    current_review << c;
+                    current_review << c; // regular character
                 }
             }
         }
@@ -125,16 +125,17 @@ std::vector<std::vector<std::string>> tokenize_reviews(const std::vector<std::st
 }
 
 std::unordered_map<std::string, double> build_vocabulary(const std::vector<std::vector<std::string>>& reviews) {
-    std::unordered_map<std::string, double> vocabulary;
+    std::unordered_map<std::string, double> vocabulary; // key: word   value: count
     
+    // filling vocabulary with # of reviews containing each unique word
     for (const auto& review : reviews) {
         // Count unique words for IDF calculation
         std::unordered_set<std::string> uniqueWordsInReview;
         for (const std::string& word : review) {
-            uniqueWordsInReview.insert(word);
+            uniqueWordsInReview.insert(word); // using set to get rid of duplicates
         }
         for (const std::string& word : uniqueWordsInReview) {
-            vocabulary[word]++;
+            vocabulary[word]++; // if this word appeared in the review, increase count in vocabulary
         }
     }
     
@@ -156,17 +157,17 @@ std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std
         const auto& review = reviews[i];
         std::unordered_map<std::string, double> freqMap;
         for (const auto& word : review) {
-            freqMap[word]++;
+            freqMap[word]++; // get count of every word in a review
         }
 
         std::vector<double> tfidf;
         for (const auto& [word, freq] : freqMap) {
-            double tf = freq / review.size();
-            double idf = vocabulary.at(word);
+            double tf = freq / review.size(); // times word appears in review / total words in review
+            double idf = vocabulary.at(word); // log (# of reviews / # of reviews where word appears)
             tfidf.push_back(tf * idf);
         }
 
-        labeledvectors.emplace_back(tfidf, classLabels[i]);
+        labeledvectors.emplace_back(tfidf, classLabels[i]); // makes a labeled vector and puts it at the end of the vector
     }
     
     return labeledvectors;
