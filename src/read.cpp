@@ -59,13 +59,15 @@ int main() {
     std::unordered_map<std::string, double> vocabulary = build_vocabulary(reviews);
     
     // Build TF-IDF vectors
-    std::vector<LabeledVector> labeledvectors = build_tfidf_vectors(reviews, classLabels, vocabulary);
+    // std::vector<LabeledVector> labeledvectors = build_tfidf_vectors(reviews, classLabels, vocabulary);
+
+    std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>> labeledvectors = build_tfidf_vectors(reviews, classLabels, vocabulary);
     
     // Print sample data for verification
     print_sample_data(classLabels, vocabulary);
     
     // Setup the neural network
     Network network = setup_network(vocabulary.size());
-    // network.train();
+    // network.train(labeledvectors.first, labeledvectors.second, 5, 0.01);
     return 0;
 }

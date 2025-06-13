@@ -37,7 +37,7 @@ void Network::train(const std::vector<std::vector<double>>& inputs, const std::v
             //     gradients[j] = output[j] - targets[i][j]; // take prediction - target for derivative of the mean square error
             //     // the derivative isnt *2 here because Loss = 1/2 (predict - target)^2 so it cancels out
             // }
-
+            
             for (int k = layers.size() - 1; k >= 0; k--) {
                 gradients = layers[k].backward(gradients, learning_rate); // pass the gradients through each layer back
             }

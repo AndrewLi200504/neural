@@ -20,9 +20,14 @@ std::vector<std::vector<std::string>> tokenize_reviews(const std::vector<std::st
 // RETURNS: map of word and their corresponding # of appearance in all the reviews
 std::unordered_map<std::string, double> build_vocabulary(const std::vector<std::vector<std::string>>& reviews);
 
+// // Build TF-IDF vectors
+// std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
+//                                             const std::vector<std::string>& classLabels,
+//                                             const std::unordered_map<std::string, double>& vocabulary);
+    
 // Build TF-IDF vectors
-// RETURNS: tfidf scores with their respective 
-std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
-                                            const std::vector<std::string>& classLabels,
-                                            const std::unordered_map<std::string, double>& vocabulary);
+// RETURNS: tfidf scores of each review in the same order as their respective labels
+std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
+                                                                                                  const std::vector<std::string>& classLabels,
+                                                                                                  const std::unordered_map<std::string, double>& vocabulary);
     

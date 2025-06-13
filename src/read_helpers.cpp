@@ -148,10 +148,39 @@ std::unordered_map<std::string, double> build_vocabulary(const std::vector<std::
     return vocabulary;
 }
 
-std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
+// std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
+//                                                const std::vector<std::string>& classLabels,
+//                                                const std::unordered_map<std::string, double>& vocabulary) {
+//     std::vector<LabeledVector> labeledvectors;
+//     std::vector<std::vector<double>> inputs;
+//     std::vector<std::vector<double>> targets;
+    
+//     for (size_t i = 0; i < reviews.size(); ++i) {
+//         const auto& review = reviews[i];
+//         std::unordered_map<std::string, double> freqMap;
+//         for (const auto& word : review) {
+//             freqMap[word]++; // get count of every word in a review
+//         }
+
+//         std::vector<double> tfidf;
+//         for (const auto& [word, freq] : freqMap) {
+//             double tf = freq / review.size(); // times word appears in review / total words in review
+//             double idf = vocabulary.at(word); // log (# of reviews / # of reviews where word appears)
+//             tfidf.push_back(tf * idf);
+//         }
+    
+//         labeledvectors.emplace_back(tfidf, classLabels[i]); // makes a labeled vector and puts it at the end of the vector
+//     }
+    
+//     return labeledvectors;
+// }
+
+std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>> build_tfidf_vectors(const std::vector<std::vector<std::string>>& reviews,
                                                const std::vector<std::string>& classLabels,
                                                const std::unordered_map<std::string, double>& vocabulary) {
-    std::vector<LabeledVector> labeledvectors;
+    // std::vector<LabeledVector> labeledvectors;
+    std::vector<std::vector<double>> inputs;
+    std::vector<std::vector<double>> targets;
     
     for (size_t i = 0; i < reviews.size(); ++i) {
         const auto& review = reviews[i];
@@ -167,8 +196,11 @@ std::vector<LabeledVector> build_tfidf_vectors(const std::vector<std::vector<std
             tfidf.push_back(tf * idf);
         }
 
-        labeledvectors.emplace_back(tfidf, classLabels[i]); // makes a labeled vector and puts it at the end of the vector
+        inputs.push_back(tfidf);
+        targets.emplace_back(1, std::stod(classLabels[i])); // doing this in case targets become more than one value
+        // labeledvectors.emplace_back(tfidf, classLabels[i]); // makes a labeled vector and puts it at the end of the vector
     }
     
-    return labeledvectors;
+    return std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>>{inputs, targets};
+    // return labeledvectors;
 }
