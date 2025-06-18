@@ -88,5 +88,6 @@
         "future": "cpp",
         "regex": "cpp",
         "mprealsupport": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/andre/neural/eigen/blas/testing"
 }

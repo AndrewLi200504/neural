@@ -1,3 +1,5 @@
+#ifndef LAYER_H
+#define LAYER_H
 #include <iostream>
 #include <vector>
 #include <string>
@@ -44,3 +46,4 @@ class Layer {
     std::vector<double> biases;
     
 };
+#endif

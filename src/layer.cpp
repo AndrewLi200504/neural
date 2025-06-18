@@ -6,7 +6,10 @@ Layer::Layer(int in_size, int out_size) {
     input_size = in_size;
     output_size = out_size;
     std::mt19937 gen(std::random_device{}());
-    std::uniform_real_distribution<double> dist(-1.0, 1.0);
+    double fan_in = input_size;
+    double fan_out = output_size;
+    double xavier_bound = sqrt(6.0 / (fan_in + fan_out));
+    std::uniform_real_distribution<double> dist(-xavier_bound, xavier_bound);
     // Create a matrix of randomized weights from 0 - 1
     for (int i = 0; i < output_size; i++) {
         biases.push_back(dist(gen)); // Create random biases from 0 - 1
@@ -44,7 +47,7 @@ std::vector<double> Layer::backward(const std::vector<double>& grad_output, doub
     std::vector<double> grad_input(input_size, 0);
 
     for (int i = 0; i < output_size; i++) {
-        double activation_deriv = activate(last_output[i])*(1-activate(last_output[i])); // put last input through derivative of activation function (sigmoid in this case)
+        double activation_deriv = last_output[i] * (1 - last_output[i]); // put last input through derivative of activation function (sigmoid in this case)
         double delta = grad_output[i] * activation_deriv; // change in loss to change in this input (dL/dz)
         for (int j = 0; j < input_size; j++) {
             grad_input[j] += delta*weights[i][j]; // gradient for each input node; sum of delta * weights that came from that node

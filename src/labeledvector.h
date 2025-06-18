@@ -1,5 +1,9 @@
+#ifndef LABELEDVECTOR_H
+#define LABELEDVECTOR_H
+
 #include <vector>
 #include <string>
+
 class LabeledVector {
     public: 
         // Create Labelled Vector
@@ -10,6 +14,12 @@ class LabeledVector {
 
         // Print Labelled Vector 
         void print();
+
+        // Get TFIDF
+        std::vector<double> getTFIDF() const;
+
+        // Get classification
+        std::string getClassification() const;
     private: 
         // Vector of TF-IDF scores (double)
         std::vector<double> TFIDF;
@@ -18,3 +28,4 @@ class LabeledVector {
         // Length
         int length;
 };
+#endif

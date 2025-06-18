@@ -19,3 +19,11 @@ void LabeledVector::print() {
     }
     std::cout << classification << std::endl;
 }
+
+std::vector<double> LabeledVector::getTFIDF() const {
+    return TFIDF;
+}
+
+std::string LabeledVector::getClassification() const {
+    return classification;
+}
