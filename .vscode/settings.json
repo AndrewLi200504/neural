@@ -84,7 +84,10 @@
         "stop_token": "cpp",
         "text_encoding": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "future": "cpp",
+        "regex": "cpp",
+        "mprealsupport": "cpp"
     },
-    "cmake.sourceDirectory": "C:/Users/andre/neural/eigen"
+    "cmake.sourceDirectory": "C:/Users/andre/neural/eigen/blas/testing"
 }

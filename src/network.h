@@ -1,38 +1,39 @@
-//#include <Eigen/Core>
-#include <iostream>
+#include "labeledvector.h"
+#include "layer.h"
 #include <vector>
+#include <string>
+#include <unordered_map>
+#include <iostream>
+#include <limits>
+#include <algorithm>    // for sort, shuffle
+#include <numeric>      // for iota
+#include <random>       // for random_device, mt19937
 
 class Network {
-    public:
-    // Constructs a network w/ one layer and a number of nodes
-    Network(std::vector<float> initLayer);
+private:
+    std::vector<Layer> layers;
+    std::unordered_map<std::string, double> class_mapping; // Maps string classifications to numeric targets
 
-    // Adds a layer to the network with specified # of nodes containing randomized weights
-    void add_layer(int amt);
-
-    // Adds a node w/ randomized weight to a specific 0-indexed layer
-    // CONSTRAINT: layer must exist
-    void add_node(int layer);
-
-    // Returns number of layers in the network
-    int layer_count() const;
-
-    // Returns the amount of nodes in entire network
-    int total_node_count() const;
-
-    // Returns number of nodes in specified 0-indexed layer
-    // CONSTRAINT: layer must exist
-    int node_count(int layer) const;
-
-    // Returns value at a 0-indexed layer, node
-    // CONSTRAINT: layer and node must exist
-    float get_weight(int layer, int node) const;
-
-    // Gives a specific node a specific weight
-    // CONSTRAINT: layer and node must exist
-    void assign(int layer, int node, float weight);
-
-    private:
-    // vector (layer) of vectors (nodes in layer)
-    std::vector<std::vector<float>> net;
+public:
+    void add_layer(int input_size, int output_size);
+    
+    // Original predict method
+    std::vector<double> predict(const std::vector<double>& input);
+    
+    // Overloaded predict method for LabeledVector
+    std::vector<double> predict(const LabeledVector& labeled_input);
+    
+    // Original train method
+    void train(const std::vector<std::vector<double>>& inputs, const std::vector<std::vector<double>>& targets, int repeats, double learning_rate);
+    
+    // New train method for LabeledVector
+    void train(const std::vector<LabeledVector>& labeled_data, int repeats, double learning_rate);
+    
+    // Methods to get predicted class as string
+    std::string predict_class(const LabeledVector& labeled_input);
+    std::string predict_class(const std::vector<double>& input);
+    
+    // Getter for class mapping (optional, for debugging)
+    std::unordered_map<std::string, double> get_class_mapping() const { return class_mapping; }
 };
+
